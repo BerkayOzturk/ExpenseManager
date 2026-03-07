@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/ExpenseManager.API/Dockerfile
+    ports:
+      - "5032:5032"
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5032
+      - ConnectionStrings__Default=Data Source=/data/expensemanager.db
+      - Jwt__Key=${JWT_KEY:-change-me-in-production-min-32-chars}
+      - Jwt__Issuer=ExpenseManager
+      - Jwt__Audience=ExpenseManager
+    volumes:
+      - api-data:/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  api-data:

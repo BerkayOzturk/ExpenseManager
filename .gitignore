@@ -1,0 +1,58 @@
+# Build / runtime
+bin/
+obj/
+out/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.log
+*.vspscc
+*.vssscc
+.build/
+.vs/
+
+# .NET
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.db
+*.db-shm
+*.db-wal
+
+# NuGet
+.nuget/
+packages/
+*.nupkg
+*.snupkg
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/*.local
+*.local
+
+# IDE / OS
+.idea/
+.vscode/
+.dotnet-home/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+**/appsettings.Development.json
+
+# Test / coverage
+coverage/
+*.lcov
+TestResults/
