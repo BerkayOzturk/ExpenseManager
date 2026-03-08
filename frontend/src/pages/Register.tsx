@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { getToken } from '../auth/storage'
 import { useAuth } from '../contexts/AuthContext'
 import { useTranslations } from '../hooks/useTranslations'
@@ -10,8 +11,10 @@ export default function Register() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const { register } = useAuth()
+  const { register, loginWithGoogle } = useAuth()
   const navigate = useNavigate()
+
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
 
   useEffect(() => {
     if (getToken()) navigate('/', { replace: true })
@@ -34,6 +37,26 @@ export default function Register() {
       setLoading(false)
     }
   }
+
+  const handleGoogleSuccess = useCallback(
+    async (credentialResponse: { credential?: string }) => {
+      const token = credentialResponse.credential
+      if (!token) return
+      setError(null)
+      setLoading(true)
+      try {
+        await loginWithGoogle(token)
+        navigate('/', { replace: true })
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t('register_failed'))
+      } finally {
+        setLoading(false)
+      }
+    },
+    [loginWithGoogle, navigate, t]
+  )
+
+  const showSocial = !!googleClientId
 
   return (
     <div className="card" style={{ maxWidth: 360, margin: '2rem auto' }}>
@@ -67,6 +90,32 @@ export default function Register() {
           {loading ? t('register_creating') : t('register_submit')}
         </button>
       </form>
+
+      {showSocial && (
+        <>
+          <p className="register-or" style={{ margin: '1rem 0', textAlign: 'center', fontSize: '0.875rem', color: '#64748b' }}>
+            {t('login_or')}
+          </p>
+          <div className="social-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {googleClientId && (
+              <div className="social-btn-wrap" style={{ display: 'flex', justifyContent: 'center' }}>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setError('Google sign-in failed')}
+                  useOneTap={false}
+                  theme="outline"
+                  size="large"
+                  type="standard"
+                  text="signin_with"
+                  shape="rectangular"
+                  width="320"
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
       <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
         {t('register_have_account')} <Link to="/login">{t('register_log_in')}</Link>
       </p>

@@ -52,6 +52,9 @@ Thumbs.db
 appsettings.Development.json
 **/appsettings.Development.json
 
+# Backups
+*.zip
+
 # Test / coverage
 coverage/
 *.lcov

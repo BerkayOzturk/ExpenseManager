@@ -7,6 +7,7 @@ interface AuthContextValue {
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string) => Promise<void>
+  loginWithGoogle: (idToken: string) => Promise<void>
   logout: () => void
 }
 
@@ -26,13 +27,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setEmail(email)
   }, [])
 
+  const loginWithGoogle = useCallback(async (idToken: string) => {
+    const res = await authApi.loginWithGoogle(idToken)
+    setEmail(res.email)
+  }, [])
+
   const logout = useCallback(() => {
     authApi.logout()
     setEmail(null)
   }, [])
 
   return (
-    <AuthContext.Provider value={{ email, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ email, isAuthenticated, login, register, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   )

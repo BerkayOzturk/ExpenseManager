@@ -21,6 +21,7 @@ Configuration is read from `appsettings.json` and environment variables. Set at 
 - `ConnectionStrings__Default` – SQLite path or other provider connection string
 - `Jwt__Key` – Secret key for JWT signing (long, random string)
 - `Jwt__Issuer` and `Jwt__Audience` – Optional; defaults in appsettings
+- **Optional (social login):** `Google__ClientId` – Google OAuth 2.0 client ID (Web application). Frontend needs the same value as `VITE_GOOGLE_CLIENT_ID` at build time.
 
 Run:
 

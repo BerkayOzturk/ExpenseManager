@@ -17,6 +17,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     login_no_account: 'No account?',
     login_register: 'Register',
     login_failed: 'Login failed',
+    login_google: 'Sign in with Google',
+    login_or: 'or',
 
     register_title: 'Register',
     register_email: 'Email',
@@ -164,6 +166,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     login_no_account: 'Hesabınız yok mu?',
     login_register: 'Kayıt ol',
     login_failed: 'Giriş başarısız',
+    login_google: 'Google ile giriş yap',
+    login_or: 'veya',
 
     register_title: 'Kayıt ol',
     register_email: 'E-posta',
