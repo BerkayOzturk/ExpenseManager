@@ -65,6 +65,33 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+// Secret admin: only allow /api/admin when X-Admin-Key matches Admin__SecretKey (env). No secret in code/repo.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/admin", StringComparison.OrdinalIgnoreCase))
+    {
+        var config = context.RequestServices.GetRequiredService<IConfiguration>();
+        var secret = config["Admin:SecretKey"];
+        if (string.IsNullOrWhiteSpace(secret))
+        {
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsJsonAsync(new { detail = "Admin access is not configured." });
+            return;
+        }
+        var key = context.Request.Headers["X-Admin-Key"].FirstOrDefault();
+        if (string.IsNullOrEmpty(key) || key != secret)
+        {
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsJsonAsync(new { detail = "Invalid admin key." });
+            return;
+        }
+    }
+    await next(context);
+});
+
 if (!app.Environment.IsProduction())
 {
     app.UseSwagger();

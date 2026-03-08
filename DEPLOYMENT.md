@@ -117,9 +117,14 @@ To let anyone (e.g. your friend on their phone) use the app over the internet:
 | `Jwt__Key` | Secret for JWT signing |
 | `Jwt__Issuer` | Issuer claim (optional) |
 | `Jwt__Audience` | Audience claim (optional) |
+| `Admin__SecretKey` | Optional. If set, allows access to `/api/admin/*` when request header `X-Admin-Key` matches. Used by the secret admin page to list users. **Never commit this value**; set it only in the host (e.g. Railway variables). |
 | `ASPNETCORE_URLS` | Listen URLs (e.g. `http://0.0.0.0:5032`) |
 
 Do not commit secrets. Use a secret manager or environment in your hosting platform.
+
+### Secret admin (optional)
+
+To view a summary of registered users (email, expense count, category count), set `Admin__SecretKey` on the host to a long random value. Then open `https://your-domain/admin`, enter that value when prompted, and use the page. The admin key is **not** stored in the repo or in Docker images; only in the host’s environment. If `Admin__SecretKey` is not set, admin endpoints return 401.
 
 ## CORS
 
