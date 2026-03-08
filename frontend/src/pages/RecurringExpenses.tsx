@@ -61,6 +61,7 @@ export default function RecurringExpenses() {
   useEffect(() => {
     load()
     loadCategories()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, [])
 
   useEffect(() => {

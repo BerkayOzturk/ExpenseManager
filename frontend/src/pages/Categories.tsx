@@ -29,6 +29,7 @@ export default function Categories() {
 
   useEffect(() => {
     load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, [])
 
   const handleCreate = async (e: React.FormEvent) => {

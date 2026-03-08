@@ -32,10 +32,9 @@ public sealed class ExpenseRepository(ExpenseManagerDbContext db) : IExpenseRepo
             query = query.Where(x => x.Description != null && x.Description.Contains(searchTerm));
 
         var totalCount = await query.CountAsync(cancellationToken);
-        var items = await query
-            .OrderByDescending(e => e.OccurredOn)
-            .ThenByDescending(e => e.CreatedAtUtc)
-            .ToListAsync(cancellationToken);
+        // SQLite does not support DateTimeOffset in ORDER BY; sort in memory
+        var items = await query.ToListAsync(cancellationToken);
+        items = items.OrderByDescending(e => e.OccurredOn).ThenByDescending(e => e.CreatedAtUtc).ToList();
         return (items, totalCount);
     }
 

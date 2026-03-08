@@ -173,6 +173,7 @@ export default function Expenses() {
   useEffect(() => {
     if (!filterFromValid) return
     loadExpenses()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loadExpenses uses current filter state
   }, [filterFrom, filterTo, filterCategoryId, filterFromValid, searchQuery])
 
   useEffect(() => {
