@@ -113,6 +113,26 @@ export const api = {
     delete: (id: string) =>
       request<void>(`/recurring-expenses/${id}`, { method: 'DELETE' }),
   },
+  admin: {
+    /** Requires X-Admin-Key header. Secret from env (Admin__SecretKey); never in repo. */
+    users: (adminKey: string) =>
+      fetch(`${BASE}/admin/users`, {
+        headers: { 'X-Admin-Key': adminKey },
+      }).then(async (res) => {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.detail ?? res.statusText)
+        }
+        return res.json() as Promise<AdminUserSummary[]>
+      }),
+  },
+}
+
+export interface AdminUserSummary {
+  userId: string
+  email: string
+  expenseCount: number
+  categoryCount: number
 }
 
 interface CreateExpenseBody {

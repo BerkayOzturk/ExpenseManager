@@ -58,6 +58,16 @@ export const translations: Record<Locale, Record<string, string>> = {
     footer_tagline: 'Track expenses, categories, and budgets.',
     footer_copyright: '© {year} Coin Canvas',
 
+    admin_title: 'Admin',
+    admin_key_placeholder: 'Admin key',
+    admin_submit: 'Access',
+    admin_invalid_key: 'Invalid admin key.',
+    admin_users: 'Users',
+    admin_email: 'Email',
+    admin_expenses: 'Expenses',
+    admin_categories: 'Categories',
+    admin_clear: 'Clear key',
+
     expenses_title: 'Expenses',
     expenses_add: 'Add expense',
     expenses_filters: 'Filters',
@@ -192,6 +202,16 @@ export const translations: Record<Locale, Record<string, string>> = {
     footer_app_name: 'Coin Canvas',
     footer_tagline: 'Giderleri, kategorileri ve bütçeleri takip edin.',
     footer_copyright: '© {year} Coin Canvas',
+
+    admin_title: 'Yönetici',
+    admin_key_placeholder: 'Yönetici anahtarı',
+    admin_submit: 'Eriş',
+    admin_invalid_key: 'Geçersiz yönetici anahtarı.',
+    admin_users: 'Kullanıcılar',
+    admin_email: 'E-posta',
+    admin_expenses: 'Giderler',
+    admin_categories: 'Kategoriler',
+    admin_clear: 'Anahtarı temizle',
 
     expenses_title: 'Giderler',
     expenses_add: 'Gider ekle',

@@ -8,6 +8,7 @@ import Budgets from './pages/Budgets'
 import Categories from './pages/Categories'
 import Expenses from './pages/Expenses'
 import RecurringExpenses from './pages/RecurringExpenses'
+import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Settings from './pages/Settings'
@@ -71,6 +72,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<ProtectedRoute><LayoutWithNav /></ProtectedRoute>} />
           </Routes>
         </div>
