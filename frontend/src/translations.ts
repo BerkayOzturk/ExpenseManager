@@ -54,9 +54,15 @@ export const translations: Record<Locale, Record<string, string>> = {
     common_actions: 'Actions',
     common_loading: 'Loading…',
 
+    footer_app_name: 'Coin Canvas',
+    footer_tagline: 'Track expenses, categories, and budgets.',
+    footer_copyright: '© {year} Coin Canvas',
+
     expenses_title: 'Expenses',
     expenses_add: 'Add expense',
     expenses_filters: 'Filters',
+    expenses_show_filters: 'Show filters',
+    expenses_hide_filters: 'Hide filters',
     expenses_filter_from: 'From',
     expenses_filter_to: 'To',
     expenses_filter_category: 'Category',
@@ -183,9 +189,15 @@ export const translations: Record<Locale, Record<string, string>> = {
     common_actions: 'İşlemler',
     common_loading: 'Yükleniyor…',
 
+    footer_app_name: 'Coin Canvas',
+    footer_tagline: 'Giderleri, kategorileri ve bütçeleri takip edin.',
+    footer_copyright: '© {year} Coin Canvas',
+
     expenses_title: 'Giderler',
     expenses_add: 'Gider ekle',
     expenses_filters: 'Filtreler',
+    expenses_show_filters: 'Filtreleri göster',
+    expenses_hide_filters: 'Filtreleri gizle',
     expenses_filter_from: 'Başlangıç',
     expenses_filter_to: 'Bitiş',
     expenses_filter_category: 'Kategori',

@@ -1,6 +1,6 @@
 # Deployment
 
-This document describes how to build and run Expense Manager for production or production-like environments.
+This document describes how to build and run Coin Canvas for production or production-like environments.
 
 ## Prerequisites
 
@@ -68,6 +68,17 @@ docker run -p 8080:8080 -e Jwt__Key="your-secret-key-min-32-chars" -e Connection
 
 ---
 
+## Before going public
+
+- [ ] **JWT secret**: Set `Jwt__Key` on the host to a long random value (e.g. `openssl rand -base64 32`). Do not use the default from appsettings.
+- [ ] **Environment**: Host sets `ASPNETCORE_ENVIRONMENT=Production` (Railway/Render do this by default). Swagger is disabled in production.
+- [ ] **Database persistence**: On Railway, add a volume and set `ConnectionStrings__Default` to a path on that volume so data survives redeploys.
+- [ ] **Custom domain**: Add your domain (e.g. coincanvas.net) in the host’s networking settings and configure DNS as instructed.
+- [ ] **Smoke test**: After deploy, test register → login → add expense → log out. Try from a phone browser.
+- [ ] **Privacy / terms** (optional): If you collect personal data (email, expenses), consider adding a Privacy policy and Terms of use and link them in the footer.
+
+---
+
 ## Going public (one URL)
 
 To let anyone (e.g. your friend on their phone) use the app over the internet:
@@ -78,7 +89,7 @@ To let anyone (e.g. your friend on their phone) use the app over the internet:
 ### Railway
 
 1. Sign up at [railway.app](https://railway.app) and connect GitHub.
-2. **New Project** → **Deploy from GitHub repo** → select your Expense Manager repo.
+2. **New Project** → **Deploy from GitHub repo** → select your Coin Canvas repo.
 3. Railway will detect the root `Dockerfile`. If it picks something else, set **Settings → Build → Dockerfile path** to `Dockerfile` (root).
 4. **Variables**: Add `Jwt__Key` (long random string, e.g. 32+ chars). Optionally set `ConnectionStrings__Default` if you want a custom path; default in-container path is fine for SQLite (data will live in the container; for persistence, add a volume in Railway).
 5. **Settings → Networking**: Generate a **Public domain**. Your app will be at `https://<your-app>.up.railway.app`.

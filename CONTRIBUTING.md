@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to Expense Manager.
+Thanks for your interest in contributing to Coin Canvas.
 
 ## Getting started
 

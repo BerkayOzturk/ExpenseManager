@@ -9,8 +9,8 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5032
       - ConnectionStrings__Default=Data Source=/data/expensemanager.db
       - Jwt__Key=${JWT_KEY:-change-me-in-production-min-32-chars}
-      - Jwt__Issuer=ExpenseManager
-      - Jwt__Audience=ExpenseManager
+      - Jwt__Issuer=CoinCanvas
+      - Jwt__Audience=CoinCanvas
     volumes:
       - api-data:/data
 
