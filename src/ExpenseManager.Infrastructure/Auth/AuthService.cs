@@ -1,8 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using ExpenseManager.Application.Abstractions;
 using ExpenseManager.Infrastructure.Identity;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +34,47 @@ public sealed class AuthService(
 
         var token = GenerateJwt(user.Id, user.Email!);
         return new AuthResult(user.Id, user.Email!, token);
+    }
+
+    public async Task<AuthResult?> LoginWithGoogleAsync(string idToken, CancellationToken cancellationToken = default)
+    {
+        var clientId = configuration["Google:ClientId"];
+        if (string.IsNullOrEmpty(clientId))
+            return null;
+
+        try
+        {
+            var validationSettings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new[] { clientId },
+            };
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, validationSettings);
+            var email = payload.Email;
+            if (string.IsNullOrEmpty(email) || !payload.EmailVerified)
+                return null;
+
+            var user = await FindOrCreateExternalUserAsync(email, cancellationToken);
+            if (user is null) return null;
+
+            var token = GenerateJwt(user.Id, user.Email!);
+            return new AuthResult(user.Id, user.Email!, token);
+        }
+        catch (InvalidJwtException)
+        {
+            return null;
+        }
+    }
+
+    private async Task<AppUser?> FindOrCreateExternalUserAsync(string email, CancellationToken cancellationToken)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is not null)
+            return user;
+
+        user = new AppUser { UserName = email, Email = email, EmailConfirmed = true };
+        var password = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        var result = await userManager.CreateAsync(user, password);
+        return result.Succeeded ? user : null;
     }
 
     private string GenerateJwt(string userId, string email)

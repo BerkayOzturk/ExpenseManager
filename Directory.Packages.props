@@ -23,5 +23,6 @@
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.1.2" />
+    <PackageVersion Include="Google.Apis.Auth" Version="1.68.0" />
   </ItemGroup>
 </Project>

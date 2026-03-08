@@ -37,6 +37,21 @@ export async function register(email: string, password: string): Promise<AuthRes
   return data
 }
 
+export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
+  const res = await fetch('/api/auth/google', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { detail?: string }
+    throw new Error(body.detail ?? 'Google sign-in failed')
+  }
+  const data = (await res.json()) as AuthResponse
+  setAuth(data.token, data.email)
+  return data
+}
+
 export function logout(): void {
   clearAuth()
 }
