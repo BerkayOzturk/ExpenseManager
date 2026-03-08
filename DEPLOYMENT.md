@@ -72,7 +72,7 @@ docker run -p 8080:8080 -e Jwt__Key="your-secret-key-min-32-chars" -e Connection
 
 - [ ] **JWT secret**: Set `Jwt__Key` on the host to a long random value (e.g. `openssl rand -base64 32`). Do not use the default from appsettings.
 - [ ] **Environment**: Host sets `ASPNETCORE_ENVIRONMENT=Production` (Railway/Render do this by default). Swagger is disabled in production.
-- [ ] **Database persistence**: On Railway, add a volume and set `ConnectionStrings__Default` to a path on that volume so data survives redeploys.
+- [ ] **Database persistence**: On Railway, add a **Volume** with mount path **`/data`** so the SQLite file at `/data/expensemanager.db` persists. Without this, redeploys wipe all users and data.
 - [ ] **Custom domain**: Add your domain (e.g. coincanvas.net) in the host’s networking settings and configure DNS as instructed.
 - [ ] **Smoke test**: After deploy, test register → login → add expense → log out. Try from a phone browser.
 - [ ] **Privacy / terms** (optional): If you collect personal data (email, expenses), consider adding a Privacy policy and Terms of use and link them in the footer.
@@ -91,9 +91,14 @@ To let anyone (e.g. your friend on their phone) use the app over the internet:
 1. Sign up at [railway.app](https://railway.app) and connect GitHub.
 2. **New Project** → **Deploy from GitHub repo** → select your Coin Canvas repo.
 3. Railway will detect the root `Dockerfile`. If it picks something else, set **Settings → Build → Dockerfile path** to `Dockerfile` (root).
-4. **Variables**: Add `Jwt__Key` (long random string, e.g. 32+ chars). Optionally set `ConnectionStrings__Default` if you want a custom path; default in-container path is fine for SQLite (data will live in the container; for persistence, add a volume in Railway).
-5. **Settings → Networking**: Generate a **Public domain**. Your app will be at `https://<your-app>.up.railway.app`.
-6. Railway usually sets `PORT`; if the app fails to start, add variable `ASPNETCORE_URLS` = `http://0.0.0.0:${PORT}` (or the port Railway shows in the dashboard).
+4. **Variables**: Add `Jwt__Key` (long random string, e.g. 32+ chars).
+5. **Persist data (required so users and data survive redeploys):**
+   - Open your service → **Settings** → **Volumes** (or **Variables** tab and look for Volumes).
+   - Click **Add Volume** (or **New Volume**). Set the **mount path** to **`/data`**.
+   - The app is configured to store the SQLite database at `/data/expensemanager.db`. Once the volume is mounted at `/data`, all users, passwords (hashes), and expense data will persist across redeploys.
+   - If you already deployed without a volume and lost data, add the volume now and redeploy. New data will then persist; old data cannot be recovered.
+6. **Settings → Networking**: Generate a **Public domain**. Your app will be at `https://<your-app>.up.railway.app`.
+7. Railway usually sets `PORT`; if the app fails to start, add variable `ASPNETCORE_URLS` = `http://0.0.0.0:${PORT}` (or the port Railway shows in the dashboard).
 
 ### Render
 
@@ -113,7 +118,7 @@ To let anyone (e.g. your friend on their phone) use the app over the internet:
 
 | Variable | Description |
 |----------|-------------|
-| `ConnectionStrings__Default` | Database connection string (e.g. `Data Source=expensemanager.db`) |
+| `ConnectionStrings__Default` | Database path. In the production Dockerfile the default is `Data Source=/data/expensemanager.db` so that a volume mounted at `/data` keeps data across redeploys. Override here if you use a different path. |
 | `Jwt__Key` | Secret for JWT signing |
 | `Jwt__Issuer` | Issuer claim (optional) |
 | `Jwt__Audience` | Audience claim (optional) |
