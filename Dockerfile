@@ -23,6 +23,8 @@ COPY --from=frontend /app/dist /app/publish/wwwroot
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS run
 WORKDIR /app
 COPY --from=combined /app/publish .
+# Persist DB: use /data (mount a volume here on Railway so data survives redeploys)
+ENV ConnectionStrings__Default=Data Source=/data/expensemanager.db
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 EXPOSE 8080
