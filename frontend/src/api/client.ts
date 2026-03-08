@@ -1,5 +1,5 @@
 import { getToken } from '../auth/storage'
-import type { Budget, BudgetSummary, Category, Expense, RecurringExpense, UpcomingExpense, UserSettings } from '../types'
+import type { Budget, BudgetSummary, Category, CreateCategoryRequest, Expense, ListExpensesResponse, RecurringExpense, UpcomingExpense, UpdateCategoryRequest, UserSettings } from '../types'
 
 const BASE = '/api'
 
@@ -35,12 +35,12 @@ export const api = {
   categories: {
     list: () => request<Category[]>('/categories'),
     get: (id: string) => request<Category>(`/categories/${id}`),
-    create: (body: { name: string }) =>
+    create: (body: CreateCategoryRequest) =>
       request<Category>('/categories', {
         method: 'POST',
         body: JSON.stringify(body),
       }),
-    update: (id: string, body: { name: string }) =>
+    update: (id: string, body: UpdateCategoryRequest) =>
       request<Category>(`/categories/${id}`, {
         method: 'PUT',
         body: JSON.stringify(body),
@@ -49,13 +49,14 @@ export const api = {
       request<void>(`/categories/${id}`, { method: 'DELETE' }),
   },
   expenses: {
-    list: (params?: { from?: string; to?: string; categoryId?: string }) => {
+    list: (params?: { from?: string; to?: string; categoryId?: string; search?: string }) => {
       const search = new URLSearchParams()
       if (params?.from) search.set('from', params.from)
       if (params?.to) search.set('to', params.to)
       if (params?.categoryId) search.set('categoryId', params.categoryId)
+      if (params?.search) search.set('search', params.search)
       const q = search.toString()
-      return request<Expense[]>(`/expenses${q ? `?${q}` : ''}`)
+      return request<ListExpensesResponse>(`/expenses${q ? `?${q}` : ''}`)
     },
     get: (id: string) => request<Expense>(`/expenses/${id}`),
     create: (body: CreateExpenseBody) =>

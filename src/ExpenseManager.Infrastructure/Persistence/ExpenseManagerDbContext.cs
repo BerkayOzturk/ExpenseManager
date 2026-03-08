@@ -30,6 +30,7 @@ public sealed class ExpenseManagerDbContext : IdentityDbContext<AppUser>
             b.HasKey(x => x.Id);
             b.Property(x => x.UserId).HasMaxLength(450).IsRequired();
             b.Property(x => x.Name).HasMaxLength(100).IsRequired();
+            b.Property(x => x.SortOrder).IsRequired();
             b.HasIndex(x => new { x.UserId, x.Name }).IsUnique();
             b.Property(x => x.CreatedAtUtc).IsRequired();
             b.Property(x => x.UpdatedAtUtc);

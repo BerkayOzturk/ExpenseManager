@@ -20,20 +20,20 @@ public sealed class CategoriesController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<CategoryDto>> GetById(Guid id, CancellationToken cancellationToken)
         => Ok(await mediator.Send(new GetCategoryByIdQuery(id), cancellationToken));
 
-    public sealed record CreateCategoryRequest(string Name);
+    public sealed record CreateCategoryRequest(string Name, int SortOrder = 0);
 
     [HttpPost]
     public async Task<ActionResult<CategoryDto>> Create(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
-        var created = await mediator.Send(new CreateCategoryCommand(request.Name), cancellationToken);
+        var created = await mediator.Send(new CreateCategoryCommand(request.Name, request.SortOrder), cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
-    public sealed record UpdateCategoryRequest(string Name);
+    public sealed record UpdateCategoryRequest(string Name, int? SortOrder);
 
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<CategoryDto>> Update(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
-        => Ok(await mediator.Send(new UpdateCategoryCommand(id, request.Name), cancellationToken));
+        => Ok(await mediator.Send(new UpdateCategoryCommand(id, request.Name, request.SortOrder), cancellationToken));
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)

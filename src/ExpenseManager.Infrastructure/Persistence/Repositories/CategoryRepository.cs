@@ -10,7 +10,7 @@ public sealed class CategoryRepository(ExpenseManagerDbContext db) : ICategoryRe
         => await db.Categories.FirstOrDefaultAsync(x => x.UserId == userId && x.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<Category>> ListAsync(string userId, CancellationToken cancellationToken = default)
-        => await db.Categories.AsNoTracking().Where(x => x.UserId == userId).ToListAsync(cancellationToken);
+        => await db.Categories.AsNoTracking().Where(x => x.UserId == userId).OrderBy(c => c.SortOrder).ThenBy(c => c.Name).ToListAsync(cancellationToken);
 
     public Task AddAsync(Category category, CancellationToken cancellationToken = default)
         => db.Categories.AddAsync(category, cancellationToken).AsTask();

@@ -15,8 +15,9 @@ public sealed class ListCategoriesHandler(ICategoryRepository categories, ICurre
         var userId = currentUser.UserId ?? throw new UnauthorizedException();
         var list = await categories.ListAsync(userId, cancellationToken);
         return list
-            .OrderBy(c => c.Name)
-            .Select(c => new CategoryDto(c.Id, c.Name))
+            .OrderBy(c => c.SortOrder)
+            .ThenBy(c => c.Name)
+            .Select(c => new CategoryDto(c.Id, c.Name, c.SortOrder))
             .ToList();
     }
 }

@@ -9,8 +9,10 @@ export default function Categories() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [name, setName] = useState('')
+  const [sortOrder, setSortOrder] = useState(0)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [editSortOrder, setEditSortOrder] = useState(0)
 
   const load = async () => {
     setLoading(true)
@@ -35,8 +37,9 @@ export default function Categories() {
     if (!trimmed) return
     setError(null)
     try {
-      await api.categories.create({ name: trimmed })
+      await api.categories.create({ name: trimmed, sortOrder })
       setName('')
+      setSortOrder(0)
       await load()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to create')
@@ -46,6 +49,7 @@ export default function Categories() {
   const startEdit = (c: Category) => {
     setEditingId(c.id)
     setEditName(c.name)
+    setEditSortOrder(c.sortOrder ?? 0)
   }
 
   const cancelEdit = () => {
@@ -60,7 +64,7 @@ export default function Categories() {
     if (!trimmed) return
     setError(null)
     try {
-      await api.categories.update(editingId, { name: trimmed })
+      await api.categories.update(editingId, { name: trimmed, sortOrder: editSortOrder })
       cancelEdit()
       await load()
     } catch (e) {
@@ -96,6 +100,16 @@ export default function Categories() {
                 placeholder={t('categories_placeholder')}
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="cat-sort">{t('categories_sort_order')}</label>
+              <input
+                id="cat-sort"
+                type="number"
+                min={0}
+                value={sortOrder}
+                onChange={(e) => setSortOrder(Number(e.target.value) || 0)}
+              />
+            </div>
             <button type="submit" className="btn btn-primary">{t('common_add')}</button>
           </div>
         </form>
@@ -122,12 +136,20 @@ export default function Categories() {
                   <tr key={c.id}>
                     <td data-label={t('common_name')}>
                       {editingId === c.id ? (
-                        <form onSubmit={handleUpdate} style={{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <form onSubmit={handleUpdate} style={{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                           <input
                             value={editName}
                             onChange={(e) => setEditName(e.target.value)}
                             autoFocus
                             style={{ width: 180 }}
+                          />
+                          <input
+                            type="number"
+                            min={0}
+                            value={editSortOrder}
+                            onChange={(e) => setEditSortOrder(Number(e.target.value) || 0)}
+                            title={t('categories_sort_order')}
+                            style={{ width: 64 }}
                           />
                           <button type="submit" className="btn btn-primary btn-sm">{t('common_save')}</button>
                           <button type="button" className="btn btn-secondary btn-sm" onClick={cancelEdit}>{t('common_cancel')}</button>

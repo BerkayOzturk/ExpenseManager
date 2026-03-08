@@ -6,6 +6,18 @@ import { useTranslations } from '../hooks/useTranslations'
 import type { Category, Expense } from '../types'
 
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'TRY', 'CHF', 'JPY', 'CAD', 'AUD'] as const
+const FILTERS_STORAGE_KEY = 'coincanvas_expense_filters'
+
+function loadSavedFilters(): { from: string; to: string; categoryId: string } {
+  try {
+    const raw = localStorage.getItem(FILTERS_STORAGE_KEY)
+    if (raw) {
+      const p = JSON.parse(raw) as { from?: string; to?: string; categoryId?: string }
+      return { from: p.from ?? '', to: p.to ?? '', categoryId: p.categoryId ?? '' }
+    }
+  } catch { /* ignore */ }
+  return { from: '', to: '', categoryId: '' }
+}
 
 const CHART_COLORS = [
   '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899',
@@ -26,9 +38,12 @@ export default function Expenses() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const [filterFrom, setFilterFrom] = useState('')
-  const [filterTo, setFilterTo] = useState('')
-  const [filterCategoryId, setFilterCategoryId] = useState('')
+  const saved = loadSavedFilters()
+  const [filterFrom, setFilterFrom] = useState(saved.from)
+  const [filterTo, setFilterTo] = useState(saved.to)
+  const [filterCategoryId, setFilterCategoryId] = useState(saved.categoryId)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [totalCount, setTotalCount] = useState(0)
 
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState(settings.defaultCurrency)
@@ -59,15 +74,18 @@ export default function Expenses() {
     setLoading(true)
     setError(null)
     try {
-      const params: { from?: string; to?: string; categoryId?: string } = {}
+      const params: { from?: string; to?: string; categoryId?: string; search?: string } = {}
       if (filterFrom) params.from = filterFrom
       if (filterTo) params.to = filterTo
       if (filterCategoryId) params.categoryId = filterCategoryId
+      if (searchQuery.trim()) params.search = searchQuery.trim()
       const data = await api.expenses.list(params)
-      setExpenses(data)
+      setExpenses(data.items)
+      setTotalCount(data.totalCount)
     } catch (e) {
       setError(e instanceof Error ? e.message : t('expenses_failed_load'))
       setExpenses([])
+      setTotalCount(0)
     } finally {
       setLoading(false)
     }
@@ -155,7 +173,15 @@ export default function Expenses() {
   useEffect(() => {
     if (!filterFromValid) return
     loadExpenses()
-  }, [filterFrom, filterTo, filterCategoryId, filterFromValid])
+  }, [filterFrom, filterTo, filterCategoryId, filterFromValid, searchQuery])
+
+  useEffect(() => {
+    localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify({
+      from: filterFrom,
+      to: filterTo,
+      categoryId: filterCategoryId,
+    }))
+  }, [filterFrom, filterTo, filterCategoryId])
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -282,6 +308,15 @@ export default function Expenses() {
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
+            </div>
+            <div className="form-group">
+              <label>{t('expenses_search')}</label>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('expenses_search')}
+              />
             </div>
             <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.875rem', color: '#64748b', marginRight: '0.25rem' }}>{t('expenses_quick')}:</span>
@@ -436,7 +471,14 @@ export default function Expenses() {
         ) : expenses.length === 0 ? (
           <p className="empty">{t('expenses_no_expenses')}</p>
         ) : (
-          <div className="table-wrap">
+          <>
+            <p style={{ margin: '0 0 0.75rem', fontSize: '0.875rem', color: '#64748b' }}>
+              {t('expenses_showing')
+                .replace('{from}', '1')
+                .replace('{to}', String(expenses.length))
+                .replace('{total}', String(totalCount))}
+            </p>
+            <div className="table-wrap">
             <table>
               <thead>
                 <tr>
@@ -534,6 +576,7 @@ export default function Expenses() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
     </>
