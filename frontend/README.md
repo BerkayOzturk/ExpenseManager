@@ -1,4 +1,4 @@
-# Expense Manager – Frontend
+# Coin Canvas – Frontend
 
 React + TypeScript + Vite. Uses the backend API at `http://localhost:5000` (proxied via Vite when using `npm run dev`).
 

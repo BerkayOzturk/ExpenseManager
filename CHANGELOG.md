@@ -28,3 +28,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Docker and docker-compose
 - LICENSE (MIT), SECURITY.md, CONTRIBUTING.md
 - Issue and PR templates, CHANGELOG
+- Rebrand: **Coin Canvas** (app name, PWA manifest, JWT issuer/audience, docs)

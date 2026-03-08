@@ -1,4 +1,5 @@
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
+import { Footer } from './components/Footer'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { useAuth } from './contexts/AuthContext'
 import { SettingsProvider } from './contexts/SettingsContext'
@@ -65,11 +66,16 @@ function LayoutWithNav() {
 function App() {
   return (
     <SettingsProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<ProtectedRoute><LayoutWithNav /></ProtectedRoute>} />
-      </Routes>
+      <div className="site">
+        <div className="site-content">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<ProtectedRoute><LayoutWithNav /></ProtectedRoute>} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </SettingsProvider>
   )
 }

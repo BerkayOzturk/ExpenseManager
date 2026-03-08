@@ -1,6 +1,6 @@
 # Architecture
 
-Expense Manager uses **Onion Architecture** (Clean Architecture style) on the backend and a simple React SPA on the frontend.
+Coin Canvas uses **Onion Architecture** (Clean Architecture style) on the backend and a simple React SPA on the frontend.
 
 ## Backend layers
 

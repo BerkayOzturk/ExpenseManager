@@ -1,6 +1,6 @@
-# ExpenseManager (.NET 8, Onion Architecture)
+# Coin Canvas (.NET 8, Onion Architecture)
 
-Backend with strict Onion Architecture:
+**Coin Canvas** is an expense-tracking app. Backend with strict Onion Architecture:
 
 | Layer | Role | Dependencies |
 |-------|------|--------------|

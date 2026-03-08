@@ -36,6 +36,9 @@ export default function Expenses() {
   const [description, setDescription] = useState('')
   const [categoryId, setCategoryId] = useState('')
 
+  const [showFilters, setShowFilters] = useState(false)
+  const [showAddExpense, setShowAddExpense] = useState(false)
+
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editAmount, setEditAmount] = useState('')
   const [editCurrency, setEditCurrency] = useState('USD')
@@ -227,115 +230,138 @@ export default function Expenses() {
     <>
       <h1 className="page-title">{t('expenses_title')}</h1>
 
-      <div className="card">
-        <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem' }}>{t('expenses_filters')}</h2>
-        <div className="filters">
-          <div className="form-group">
-            <label>{t('expenses_filter_from')}</label>
-            <input
-              type="date"
-              value={filterFrom}
-              max={filterTo || undefined}
-              onChange={(e) => setFilterFrom(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label>{t('expenses_filter_to')}</label>
-            <input
-              type="date"
-              value={filterTo}
-              min={filterFrom || undefined}
-              onChange={(e) => setFilterTo(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label>{t('expenses_filter_category')}</label>
-            <select
-              value={filterCategoryId}
-              onChange={(e) => setFilterCategoryId(e.target.value)}
-            >
-              <option value="">{t('expenses_all')}</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.875rem', color: '#64748b', marginRight: '0.25rem' }}>{t('expenses_quick')}:</span>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={applyThisMonth}>
-              {t('expenses_quick_this_month')}
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={applyLastMonth}>
-              {t('expenses_quick_last_month')}
-            </button>
-            <button type="button" className="btn btn-secondary btn-sm" onClick={applyThisYear}>
-              {t('expenses_quick_this_year')}
-            </button>
-          </div>
-        </div>
-        {!filterFromValid && (
-          <p className="error-msg">{t('expenses_invalid_dates')}</p>
-        )}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => setShowFilters((v) => !v)}
+          aria-expanded={showFilters}
+        >
+          {showFilters ? t('expenses_hide_filters') : t('expenses_show_filters')}
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => setShowAddExpense((v) => !v)}
+          aria-expanded={showAddExpense}
+        >
+          {showAddExpense ? t('common_cancel') : t('expenses_add')}
+        </button>
       </div>
 
-      <div className="card">
-        <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem' }}>{t('expenses_add')}</h2>
-        <form onSubmit={handleCreate}>
-          <div className="form-row">
+      {showFilters && (
+        <div className="card">
+          <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem' }}>{t('expenses_filters')}</h2>
+          <div className="filters">
             <div className="form-group">
-              <label>{t('expenses_amount')}</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-            <div className="form-group">
-              <label>{t('expenses_currency')}</label>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-              >
-                {CURRENCIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>{t('expenses_date')}</label>
+              <label>{t('expenses_filter_from')}</label>
               <input
                 type="date"
-                value={occurredOn}
-                onChange={(e) => setOccurredOn(e.target.value)}
+                value={filterFrom}
+                max={filterTo || undefined}
+                onChange={(e) => setFilterFrom(e.target.value)}
               />
             </div>
             <div className="form-group">
-              <label>{t('expenses_category')}</label>
+              <label>{t('expenses_filter_to')}</label>
+              <input
+                type="date"
+                value={filterTo}
+                min={filterFrom || undefined}
+                onChange={(e) => setFilterTo(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>{t('expenses_filter_category')}</label>
               <select
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
+                value={filterCategoryId}
+                onChange={(e) => setFilterCategoryId(e.target.value)}
               >
-                <option value="">{t('expenses_none')}</option>
+                <option value="">{t('expenses_all')}</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label>{t('expenses_description')}</label>
-              <input
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder={t('expenses_optional')}
-              />
+            <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.875rem', color: '#64748b', marginRight: '0.25rem' }}>{t('expenses_quick')}:</span>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={applyThisMonth}>
+                {t('expenses_quick_this_month')}
+              </button>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={applyLastMonth}>
+                {t('expenses_quick_last_month')}
+              </button>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={applyThisYear}>
+                {t('expenses_quick_this_year')}
+              </button>
             </div>
-            <button type="submit" className="btn btn-primary">{t('common_add')}</button>
           </div>
-        </form>
-      </div>
+          {!filterFromValid && (
+            <p className="error-msg">{t('expenses_invalid_dates')}</p>
+          )}
+        </div>
+      )}
+
+      {showAddExpense && (
+        <div className="card">
+          <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem' }}>{t('expenses_add')}</h2>
+          <form onSubmit={handleCreate}>
+            <div className="form-row">
+              <div className="form-group">
+                <label>{t('expenses_amount')}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                />
+              </div>
+              <div className="form-group">
+                <label>{t('expenses_currency')}</label>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                >
+                  {CURRENCIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>{t('expenses_date')}</label>
+                <input
+                  type="date"
+                  value={occurredOn}
+                  onChange={(e) => setOccurredOn(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label>{t('expenses_category')}</label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                >
+                  <option value="">{t('expenses_none')}</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>{t('expenses_description')}</label>
+                <input
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={t('expenses_optional')}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">{t('common_add')}</button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {chartDataByCurrency.length > 0 && (
         <div className="card">

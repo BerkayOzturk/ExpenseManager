@@ -38,9 +38,9 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "ExpenseManagerSecretKeyThatIsAtLeast32CharactersLong!";
-var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "ExpenseManager";
-var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "ExpenseManager";
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "CoinCanvasSecretKeyThatIsAtLeast32CharactersLong!";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "CoinCanvas";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "CoinCanvas";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
@@ -65,8 +65,11 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseSwagger();
-app.UseSwaggerUI();
+if (!app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.UseStaticFiles();
 app.MapControllers();
 if (app.Environment.IsProduction())

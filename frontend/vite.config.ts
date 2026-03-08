@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico'],
       manifest: {
-        name: 'Expense Manager',
-        short_name: 'Expenses',
+        name: 'Coin Canvas',
+        short_name: 'Coin Canvas',
         description: 'Track expenses, categories, and budgets',
         theme_color: '#1e293b',
         background_color: '#0f172a',
