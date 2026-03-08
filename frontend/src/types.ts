@@ -37,7 +37,7 @@ export interface CreateExpenseRequest {
   categoryId?: string | null
 }
 
-export interface UpdateExpenseRequest extends CreateExpenseRequest {}
+export type UpdateExpenseRequest = CreateExpenseRequest
 
 export interface Budget {
   id: string

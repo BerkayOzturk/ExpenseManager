@@ -60,6 +60,7 @@ export default function Budgets() {
   useEffect(() => {
     loadSummary()
     loadCategories()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
   }, [])
 
   useEffect(() => {
