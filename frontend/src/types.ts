@@ -1,6 +1,7 @@
 export interface Category {
   id: string
   name: string
+  sortOrder?: number
 }
 
 export interface Expense {
@@ -15,10 +16,17 @@ export interface Expense {
 
 export interface CreateCategoryRequest {
   name: string
+  sortOrder?: number
 }
 
 export interface UpdateCategoryRequest {
   name: string
+  sortOrder?: number
+}
+
+export interface ListExpensesResponse {
+  items: Expense[]
+  totalCount: number
 }
 
 export interface CreateExpenseRequest {

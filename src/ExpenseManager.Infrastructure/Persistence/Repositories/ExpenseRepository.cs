@@ -11,11 +11,12 @@ public sealed class ExpenseRepository(ExpenseManagerDbContext db) : IExpenseRepo
             .Include(x => x.Category)
             .FirstOrDefaultAsync(x => x.UserId == userId && x.Id == id, cancellationToken);
 
-    public async Task<IReadOnlyList<Expense>> ListAsync(
+    public async Task<(IReadOnlyList<Expense> Items, int TotalCount)> ListWithCountAsync(
         string userId,
         DateOnly? from,
         DateOnly? to,
         Guid? categoryId,
+        string? search,
         CancellationToken cancellationToken = default)
     {
         var query = db.Expenses
@@ -26,8 +27,16 @@ public sealed class ExpenseRepository(ExpenseManagerDbContext db) : IExpenseRepo
         if (from is not null) query = query.Where(x => x.OccurredOn >= from.Value);
         if (to is not null) query = query.Where(x => x.OccurredOn <= to.Value);
         if (categoryId is not null) query = query.Where(x => x.CategoryId == categoryId);
+        var searchTerm = search?.Trim();
+        if (!string.IsNullOrEmpty(searchTerm))
+            query = query.Where(x => x.Description != null && x.Description.Contains(searchTerm));
 
-        return await query.ToListAsync(cancellationToken);
+        var totalCount = await query.CountAsync(cancellationToken);
+        var items = await query
+            .OrderByDescending(e => e.OccurredOn)
+            .ThenByDescending(e => e.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+        return (items, totalCount);
     }
 
     public async Task<decimal> GetTotalSpentAsync(string userId, string currency, int year, int? month, Guid? categoryId, CancellationToken cancellationToken = default)

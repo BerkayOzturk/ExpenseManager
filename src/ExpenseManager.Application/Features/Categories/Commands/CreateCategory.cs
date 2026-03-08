@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ExpenseManager.Application.Features.Categories.Commands;
 
-public sealed record CreateCategoryCommand(string Name) : IRequest<CategoryDto>;
+public sealed record CreateCategoryCommand(string Name, int SortOrder = 0) : IRequest<CategoryDto>;
 
 public sealed class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 {
@@ -28,11 +28,11 @@ public sealed class CreateCategoryHandler(ICategoryRepository categories, IUnitO
         if (await categories.ExistsWithNameAsync(userId, name, excludingId: null, cancellationToken))
             throw new ValidationException($"Category with name '{name}' already exists.");
 
-        var category = new Category(name, userId);
+        var category = new Category(name, userId, request.SortOrder);
         await categories.AddAsync(category, cancellationToken);
         await uow.SaveChangesAsync(cancellationToken);
 
-        return new CategoryDto(category.Id, category.Name);
+        return new CategoryDto(category.Id, category.Name, category.SortOrder);
     }
 }
 

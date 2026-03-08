@@ -5,19 +5,18 @@ using MediatR;
 
 namespace ExpenseManager.Application.Features.Expenses.Queries;
 
-public sealed record ListExpensesQuery(DateOnly? From, DateOnly? To, Guid? CategoryId) : IRequest<IReadOnlyList<ExpenseDto>>;
+public sealed record ListExpensesQuery(DateOnly? From, DateOnly? To, Guid? CategoryId, string? Search) : IRequest<ListExpensesResponse>;
 
 public sealed class ListExpensesHandler(IExpenseRepository expenses, ICurrentUserService currentUser)
-    : IRequestHandler<ListExpensesQuery, IReadOnlyList<ExpenseDto>>
+    : IRequestHandler<ListExpensesQuery, ListExpensesResponse>
 {
-    public async Task<IReadOnlyList<ExpenseDto>> Handle(ListExpensesQuery request, CancellationToken cancellationToken)
+    public async Task<ListExpensesResponse> Handle(ListExpensesQuery request, CancellationToken cancellationToken)
     {
         var userId = currentUser.UserId ?? throw new UnauthorizedException();
-        var list = await expenses.ListAsync(userId, request.From, request.To, request.CategoryId, cancellationToken);
+        var (items, totalCount) = await expenses.ListWithCountAsync(
+            userId, request.From, request.To, request.CategoryId, request.Search, cancellationToken);
 
-        return list
-            .OrderByDescending(e => e.OccurredOn)
-            .ThenByDescending(e => e.CreatedAtUtc)
+        var dtos = items
             .Select(e => new ExpenseDto(
                 e.Id,
                 e.Amount,
@@ -27,6 +26,8 @@ public sealed class ListExpensesHandler(IExpenseRepository expenses, ICurrentUse
                 e.CategoryId,
                 e.Category?.Name))
             .ToList();
+
+        return new ListExpensesResponse(dtos, totalCount);
     }
 }
 

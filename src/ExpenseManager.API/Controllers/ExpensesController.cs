@@ -13,12 +13,13 @@ namespace ExpenseManager.API.Controllers;
 public sealed class ExpensesController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<ExpenseDto>>> List(
+    public async Task<ActionResult<ListExpensesResponse>> List(
         [FromQuery] DateOnly? from,
         [FromQuery] DateOnly? to,
         [FromQuery] Guid? categoryId,
+        [FromQuery] string? search,
         CancellationToken cancellationToken)
-        => Ok(await mediator.Send(new ListExpensesQuery(from, to, categoryId), cancellationToken));
+        => Ok(await mediator.Send(new ListExpensesQuery(from, to, categoryId, search), cancellationToken));
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<ExpenseDto>> GetById(Guid id, CancellationToken cancellationToken)

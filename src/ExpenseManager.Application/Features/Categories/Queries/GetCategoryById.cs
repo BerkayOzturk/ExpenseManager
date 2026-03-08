@@ -16,7 +16,7 @@ public sealed class GetCategoryByIdHandler(ICategoryRepository categories, ICurr
         var category = await categories.GetByIdAsync(userId, request.Id, cancellationToken);
         if (category is null) throw new NotFoundException("Category not found.");
 
-        return new CategoryDto(category.Id, category.Name);
+        return new CategoryDto(category.Id, category.Name, category.SortOrder);
     }
 }
 

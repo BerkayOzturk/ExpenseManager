@@ -16,9 +16,24 @@ public sealed class DatabaseInitializer(IServiceScopeFactory scopeFactory) : IHo
         using var scope = scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ExpenseManagerDbContext>();
         await db.Database.EnsureCreatedAsync(cancellationToken);
+        await EnsureCategoriesSortOrderColumnAsync(db, cancellationToken);
         await EnsureBudgetsTableExistsAsync(db, cancellationToken);
         await EnsureUserSettingsTableExistsAsync(db, cancellationToken);
         await EnsureRecurringExpensesTableExistsAsync(db, cancellationToken);
+    }
+
+    private static async Task EnsureCategoriesSortOrderColumnAsync(ExpenseManagerDbContext db, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await db.Database.ExecuteSqlRawAsync(
+                "ALTER TABLE Categories ADD COLUMN SortOrder INTEGER NOT NULL DEFAULT 0",
+                cancellationToken);
+        }
+        catch
+        {
+            // Column already exists (e.g. after schema update)
+        }
     }
 
     private static async Task EnsureRecurringExpensesTableExistsAsync(ExpenseManagerDbContext db, CancellationToken cancellationToken)

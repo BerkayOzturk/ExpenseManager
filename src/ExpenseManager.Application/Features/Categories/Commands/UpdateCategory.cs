@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ExpenseManager.Application.Features.Categories.Commands;
 
-public sealed record UpdateCategoryCommand(Guid Id, string Name) : IRequest<CategoryDto>;
+public sealed record UpdateCategoryCommand(Guid Id, string Name, int? SortOrder) : IRequest<CategoryDto>;
 
 public sealed class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCommand>
 {
@@ -31,9 +31,11 @@ public sealed class UpdateCategoryHandler(ICategoryRepository categories, IUnitO
             throw new ValidationException($"Category with name '{name}' already exists.");
 
         category.Rename(name);
+        if (request.SortOrder.HasValue)
+            category.SetSortOrder(request.SortOrder.Value);
         await uow.SaveChangesAsync(cancellationToken);
 
-        return new CategoryDto(category.Id, category.Name);
+        return new CategoryDto(category.Id, category.Name, category.SortOrder);
     }
 }
 
