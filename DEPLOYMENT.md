@@ -78,6 +78,40 @@ docker run -p 8080:8080 -e Jwt__Key="your-secret-key-min-32-chars" -e Connection
 - [ ] **Custom domain**: Add your domain (e.g. coincanvas.net) in the host’s networking settings and configure DNS as instructed.
 - [ ] **Smoke test**: After deploy, test register → login → add expense → log out. Try from a phone browser.
 - [ ] **Privacy / terms** (optional): If you collect personal data (email, expenses), consider adding a Privacy policy and Terms of use and link them in the footer.
+- [ ] **SEO**: The frontend includes a meta description, Open Graph and Twitter Card tags, `robots.txt`, and `sitemap.xml`. See **SEO and getting found** below to submit your site to search engines.
+
+---
+
+## SEO and getting found
+
+To help your site show up in Google and other search engines:
+
+1. **Domain in meta and sitemap**  
+   The app uses `https://coincanvas.net` in `frontend/index.html` (canonical, Open Graph URL) and in `frontend/public/sitemap.xml` and `frontend/public/robots.txt`. If your live site uses a **different domain**, replace `coincanvas.net` in those files with your real domain, then rebuild the frontend.
+
+2. **Google Search Console**  
+   - Go to [Google Search Console](https://search.google.com/search-console).  
+   - Add a property with your site URL (e.g. `https://coincanvas.net`).  
+   - Verify ownership (HTML file upload or DNS record as suggested).  
+   - Submit your sitemap: **Sitemaps** → Add `https://coincanvas.net/sitemap.xml`.
+
+3. **Bing Webmaster Tools**  
+   - Go to [Bing Webmaster Tools](https://www.bing.com/webmasters).  
+   - Add your site and verify.  
+   - Submit the same sitemap URL.
+
+4. **What's already in the app**  
+   - **Title and description** in `index.html` for search snippets.  
+   - **Keywords** meta tag.  
+   - **Canonical URL** to avoid duplicate content.  
+   - **Open Graph** and **Twitter Card** meta tags so links look good when shared.  
+   - **robots.txt** allowing crawlers and pointing to the sitemap.  
+   - **sitemap.xml** listing the main public pages (home, login, register, privacy, terms).
+
+5. **Getting more traffic**  
+   - Share your link on social media, forums, or Product Hunt.  
+   - Add a short tagline or one-line pitch on the login/register screen so new visitors understand what the app does.  
+   - Over time, backlinks from other sites and consistent use of the same domain help rankings.
 
 ---
 
