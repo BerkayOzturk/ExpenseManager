@@ -17,12 +17,15 @@ The same React web app runs as a **native mobile app** on iOS and Android using 
 
 ## Build and run
 
-### 1. Build the web app for mobile
-
-From the repo root or from `frontend/`:
+**Important:** All commands below must be run from inside the `frontend` folder. From the repo root:
 
 ```bash
 cd frontend
+```
+
+### 1. Build the web app for mobile
+
+```bash
 npm run build:mobile
 ```
 
@@ -52,13 +55,19 @@ This runs `build:mobile` and then `npx cap sync`, copying the built files into t
 
 **iOS (macOS only)**
 
-- If the iOS platform wasn’t added yet (e.g. CocoaPods was missing), install CocoaPods then run:
-  ```bash
-  npx cap add ios
-  npx cap sync
-  ```
-- Open the iOS project: `npx cap open ios`.
-- In Xcode, select a simulator or device and run.
+1. Install **CocoaPods** (required once):  
+   `brew install cocoapods`
+
+2. If you see *"ios platform has not been added yet"* or *"CocoaPods is not installed"*, add the iOS platform first (from the `frontend` folder):
+   ```bash
+   cd frontend
+   npx cap add ios
+   npx cap sync
+   ```
+
+3. Open the iOS project:  
+   `npx cap open ios`  
+   (or `npm run cap:ios` after the platform is added). In Xcode, select a simulator or device and run.
 
 ## Project layout (mobile)
 
