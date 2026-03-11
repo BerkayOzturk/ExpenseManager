@@ -60,6 +60,9 @@ export default function Register() {
 
   return (
     <div className="card" style={{ maxWidth: 360, margin: '2rem auto' }}>
+      <p className="register-intro" style={{ marginBottom: '1rem', fontSize: '0.95rem', color: '#475569', lineHeight: 1.4 }}>
+        {t('login_intro')}
+      </p>
       <h1 className="page-title" style={{ marginBottom: '1rem' }}>{t('register_title')}</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group" style={{ marginBottom: '1rem' }}>
