@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { apiBaseUrl } from '../config'
 
 interface AuthConfigState {
   googleClientId: string
@@ -11,7 +12,7 @@ export function AuthConfigProvider({ children }: { children: React.ReactNode }) 
   const [googleClientId, setGoogleClientId] = useState('')
 
   useEffect(() => {
-    fetch('/api/auth/config')
+    fetch(`${apiBaseUrl}/auth/config`)
       .then((res) => (res.ok ? res.json() : {}))
       .then((data: { googleClientId?: string }) => setGoogleClientId(data.googleClientId ?? ''))
       .catch(() => {})
