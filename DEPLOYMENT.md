@@ -21,7 +21,8 @@ Configuration is read from `appsettings.json` and environment variables. Set at 
 - `ConnectionStrings__Default` – SQLite path or other provider connection string
 - `Jwt__Key` – Secret key for JWT signing (long, random string)
 - `Jwt__Issuer` and `Jwt__Audience` – Optional; defaults in appsettings
-- **Optional (social login):** `Google__ClientId` – Google OAuth 2.0 client ID (Web application). Frontend needs the same value as `VITE_GOOGLE_CLIENT_ID` at build time.
+- **Optional (social login):** `Google__ClientId` – Google OAuth 2.0 client ID (Web application). Frontend gets it from GET /api/auth/config.
+- **Optional (forgot password):** To send reset codes by email, set `Smtp__Host`, `Smtp__Port` (e.g. 587), `Smtp__User`, `Smtp__Password`, `Smtp__FromEmail`, `Smtp__FromName`. If `Smtp__Host` is empty, codes are only logged (useful for local dev).
 
 Run:
 

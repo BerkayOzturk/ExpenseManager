@@ -1,6 +1,7 @@
 using ExpenseManager.Application.Abstractions;
 using ExpenseManager.Application.Abstractions.Persistence;
 using ExpenseManager.Infrastructure.Auth;
+using ExpenseManager.Infrastructure.Email;
 using ExpenseManager.Infrastructure.Identity;
 using ExpenseManager.Infrastructure.Persistence;
 using ExpenseManager.Infrastructure.Persistence.Repositories;
@@ -33,6 +34,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ExpenseManagerDbContext>();
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPasswordResetCodeStore, PasswordResetCodeStore>();
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBudgetRepository, BudgetRepository>();

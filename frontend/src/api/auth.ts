@@ -52,6 +52,30 @@ export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
   return data
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  const res = await fetch('/api/auth/forgot-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { detail?: string }
+    throw new Error(body.detail ?? 'Request failed')
+  }
+}
+
+export async function resetPassword(email: string, code: string, newPassword: string): Promise<void> {
+  const res = await fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, code, newPassword }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { detail?: string }
+    throw new Error(body.detail ?? 'Reset failed')
+  }
+}
+
 export function logout(): void {
   clearAuth()
 }

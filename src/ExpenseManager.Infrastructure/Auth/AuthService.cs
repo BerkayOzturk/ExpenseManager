@@ -13,8 +13,13 @@ namespace ExpenseManager.Infrastructure.Auth;
 
 public sealed class AuthService(
     UserManager<AppUser> userManager,
-    IConfiguration configuration) : IAuthService
+    IConfiguration configuration,
+    IPasswordResetCodeStore codeStore,
+    IEmailSender emailSender) : IAuthService
 {
+    private const int CodeLength = 6;
+    private static readonly TimeSpan CodeExpiry = TimeSpan.FromMinutes(15);
+    private const string ResetEmailSubject = "Your password reset code - Coin Canvas";
     public async Task<AuthResult> RegisterAsync(string email, string password, CancellationToken cancellationToken = default)
     {
         var user = new AppUser { UserName = email, Email = email };
@@ -63,6 +68,43 @@ public sealed class AuthService(
         {
             return null;
         }
+    }
+
+    public async Task RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+            return;
+
+        var code = GenerateNumericCode(CodeLength);
+        var expiresAt = DateTimeOffset.UtcNow.Add(CodeExpiry);
+        await codeStore.StoreAsync(email, code, expiresAt, cancellationToken);
+
+        var body = $"Your password reset code is: {code}\n\nIt expires in {CodeExpiry.TotalMinutes} minutes.\n\nIf you didn't request this, you can ignore this email.";
+        await emailSender.SendAsync(email, ResetEmailSubject, body, cancellationToken);
+    }
+
+    public async Task<bool> ResetPasswordWithCodeAsync(string email, string code, string newPassword, CancellationToken cancellationToken = default)
+    {
+        if (!await codeStore.TryConsumeAsync(email, code.Trim(), cancellationToken))
+            return false;
+
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+            return false;
+
+        await userManager.RemovePasswordAsync(user);
+        var result = await userManager.AddPasswordAsync(user, newPassword);
+        return result.Succeeded;
+    }
+
+    private static string GenerateNumericCode(int length)
+    {
+        var bytes = RandomNumberGenerator.GetBytes(length * 2);
+        var sb = new System.Text.StringBuilder(length);
+        for (var i = 0; i < length; i++)
+            sb.Append((bytes[i] % 10).ToString());
+        return sb.ToString();
     }
 
     private async Task<AppUser?> FindOrCreateExternalUserAsync(string email, CancellationToken cancellationToken)

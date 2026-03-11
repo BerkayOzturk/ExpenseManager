@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
 import { getToken } from '../auth/storage'
 import { useAuth } from '../contexts/AuthContext'
+import { useAuthConfig } from '../contexts/AuthConfigContext'
 import { useTranslations } from '../hooks/useTranslations'
 
 export default function Login() {
@@ -12,9 +13,8 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { login, loginWithGoogle } = useAuth()
+  const { googleClientId } = useAuthConfig()
   const navigate = useNavigate()
-
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
 
   useEffect(() => {
     if (getToken()) navigate('/', { replace: true })
@@ -69,7 +69,7 @@ export default function Login() {
             required
           />
         </div>
-        <div className="form-group" style={{ marginBottom: '1rem' }}>
+        <div className="form-group" style={{ marginBottom: '0.5rem' }}>
           <label htmlFor="password">{t('login_password')}</label>
           <input
             id="password"
@@ -80,6 +80,9 @@ export default function Login() {
             required
           />
         </div>
+        <p style={{ marginBottom: '1rem', fontSize: '0.875rem' }}>
+          <Link to="/forgot-password">{t('login_forgot_password')}</Link>
+        </p>
         {error && <p className="error-msg">{error}</p>}
         <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', marginTop: '0.5rem' }}>
           {loading ? t('login_signing_in') : t('login_submit')}

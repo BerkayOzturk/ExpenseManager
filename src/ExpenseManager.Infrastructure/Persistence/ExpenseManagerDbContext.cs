@@ -15,6 +15,7 @@ public sealed class ExpenseManagerDbContext : IdentityDbContext<AppUser>
     public DbSet<Budget> Budgets => Set<Budget>();
     public DbSet<UserSettings> UserSettings => Set<UserSettings>();
     public DbSet<RecurringExpense> RecurringExpenses => Set<RecurringExpense>();
+    public DbSet<PasswordResetCode> PasswordResetCodes => Set<PasswordResetCode>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,6 +105,16 @@ public sealed class ExpenseManagerDbContext : IdentityDbContext<AppUser>
             b.Property(x => x.EndOn).HasConversion(dateOnlyConverter).HasMaxLength(10);
             b.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.SetNull);
             b.HasIndex(x => x.UserId);
+        });
+
+        modelBuilder.Entity<PasswordResetCode>(b =>
+        {
+            b.ToTable("PasswordResetCodes");
+            b.HasKey(x => x.Email);
+            b.Property(x => x.Email).HasMaxLength(256).IsRequired();
+            b.Property(x => x.Code).HasMaxLength(10).IsRequired();
+            b.Property(x => x.ResetToken).IsRequired();
+            b.Property(x => x.ExpiresAtUtc).IsRequired();
         });
     }
 }

@@ -11,6 +11,9 @@ import RecurringExpenses from './pages/RecurringExpenses'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import Settings from './pages/Settings'
 import './App.css'
 
@@ -72,6 +75,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<ProtectedRoute><LayoutWithNav /></ProtectedRoute>} />
           </Routes>
