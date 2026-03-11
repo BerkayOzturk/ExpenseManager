@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
 import { getToken } from '../auth/storage'
 import { useAuth } from '../contexts/AuthContext'
+import { useAuthConfig } from '../contexts/AuthConfigContext'
 import { useTranslations } from '../hooks/useTranslations'
 
 export default function Register() {
@@ -12,9 +13,8 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { register, loginWithGoogle } = useAuth()
+  const { googleClientId } = useAuthConfig()
   const navigate = useNavigate()
-
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''
 
   useEffect(() => {
     if (getToken()) navigate('/', { replace: true })

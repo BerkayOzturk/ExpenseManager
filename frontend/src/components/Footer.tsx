@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useTranslations } from '../hooks/useTranslations'
 
 export function Footer() {
@@ -10,6 +11,11 @@ export function Footer() {
       <div className="site-footer__inner">
         <span className="site-footer__name">{t('footer_app_name')}</span>
         <span className="site-footer__tagline">{t('footer_tagline')}</span>
+        <span className="site-footer__links">
+          <Link to="/privacy" className="site-footer__link">{t('footer_privacy')}</Link>
+          <span className="site-footer__sep" aria-hidden>·</span>
+          <Link to="/terms" className="site-footer__link">{t('footer_terms')}</Link>
+        </span>
         <span className="site-footer__copy">{copyright}</span>
       </div>
     </footer>

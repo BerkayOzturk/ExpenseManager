@@ -20,6 +20,7 @@ public sealed class DatabaseInitializer(IServiceScopeFactory scopeFactory) : IHo
         await EnsureBudgetsTableExistsAsync(db, cancellationToken);
         await EnsureUserSettingsTableExistsAsync(db, cancellationToken);
         await EnsureRecurringExpensesTableExistsAsync(db, cancellationToken);
+        await EnsurePasswordResetCodesTableExistsAsync(db, cancellationToken);
     }
 
     private static async Task EnsureCategoriesSortOrderColumnAsync(ExpenseManagerDbContext db, CancellationToken cancellationToken)
@@ -55,6 +56,20 @@ public sealed class DatabaseInitializer(IServiceScopeFactory scopeFactory) : IHo
             cancellationToken);
         await db.Database.ExecuteSqlRawAsync(
             "CREATE INDEX IF NOT EXISTS IX_RecurringExpenses_UserId ON RecurringExpenses(UserId)",
+            cancellationToken);
+    }
+
+    private static async Task EnsurePasswordResetCodesTableExistsAsync(ExpenseManagerDbContext db, CancellationToken cancellationToken)
+    {
+        await db.Database.ExecuteSqlRawAsync(
+            """
+            CREATE TABLE IF NOT EXISTS PasswordResetCodes (
+                Email TEXT NOT NULL PRIMARY KEY,
+                Code TEXT NOT NULL,
+                ResetToken TEXT NOT NULL,
+                ExpiresAtUtc TEXT NOT NULL
+            )
+            """,
             cancellationToken);
     }
 
