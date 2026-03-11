@@ -15,6 +15,7 @@ Domain exceptions are converted to application exceptions in the Application pip
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) – Layers, patterns, and where to add new features.
 - [DEPLOYMENT.md](DEPLOYMENT.md) – Build, run, and deploy (including Docker and **going public** with Railway/Render).
+- [MOBILE.md](MOBILE.md) – Build and run the **mobile app** (iOS/Android) with Capacitor.
 - [CONTRIBUTING.md](CONTRIBUTING.md) – How to contribute.
 - [SECURITY.md](SECURITY.md) – How to report security issues.
 

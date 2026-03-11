@@ -1,7 +1,8 @@
 import { getToken } from '../auth/storage'
+import { apiBaseUrl } from '../config'
 import type { Budget, BudgetSummary, Category, CreateCategoryRequest, Expense, ListExpensesResponse, RecurringExpense, UpcomingExpense, UpdateCategoryRequest, UserSettings } from '../types'
 
-const BASE = '/api'
+const BASE = apiBaseUrl
 
 async function request<T>(
   path: string,
