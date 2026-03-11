@@ -20,6 +20,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     login_google: 'Sign in with Google',
     login_or: 'or',
     login_forgot_password: 'Forgot password?',
+    login_intro: 'Track expenses, set budgets, and see where your money goes. Simple and private.',
 
     forgot_title: 'Forgot password',
     forgot_step1_instruction: 'Enter your email and we’ll send you a code to reset your password.',
@@ -214,6 +215,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     login_google: 'Google ile giriş yap',
     login_or: 'veya',
     login_forgot_password: 'Şifremi unuttum',
+    login_intro: 'Harcamaları takip edin, bütçe belirleyin, paranızın nereye gittiğini görün. Basit ve gizli.',
 
     forgot_title: 'Şifremi unuttum',
     forgot_step1_instruction: 'E-posta adresinizi girin, size şifre sıfırlama kodu göndereceğiz.',
