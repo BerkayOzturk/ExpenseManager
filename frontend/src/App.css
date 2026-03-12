@@ -3,6 +3,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Avoid content under the notch / status bar on iOS */
+  padding-top: env(safe-area-inset-top);
 }
 
 .site-content {
