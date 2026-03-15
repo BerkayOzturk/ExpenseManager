@@ -1,5 +1,4 @@
 import { clearAuth, setAuth } from '../auth/storage'
-import { apiBaseUrl } from '../config'
 
 export interface AuthResponse {
   userId: string
@@ -8,7 +7,7 @@ export interface AuthResponse {
 }
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
-  const res = await fetch(`${apiBaseUrl}/auth/login`, {
+  const res = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -23,7 +22,7 @@ export async function login(email: string, password: string): Promise<AuthRespon
 }
 
 export async function register(email: string, password: string): Promise<AuthResponse> {
-  const res = await fetch(`${apiBaseUrl}/auth/register`, {
+  const res = await fetch('/api/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -39,7 +38,7 @@ export async function register(email: string, password: string): Promise<AuthRes
 }
 
 export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
-  const res = await fetch(`${apiBaseUrl}/auth/google`, {
+  const res = await fetch('/api/auth/google', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ idToken }),
@@ -54,7 +53,7 @@ export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
 }
 
 export async function forgotPassword(email: string): Promise<void> {
-  const res = await fetch(`${apiBaseUrl}/auth/forgot-password`, {
+  const res = await fetch('/api/auth/forgot-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
@@ -66,7 +65,7 @@ export async function forgotPassword(email: string): Promise<void> {
 }
 
 export async function resetPassword(email: string, code: string, newPassword: string): Promise<void> {
-  const res = await fetch(`${apiBaseUrl}/auth/reset-password`, {
+  const res = await fetch('/api/auth/reset-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, code, newPassword }),

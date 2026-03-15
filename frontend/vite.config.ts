@@ -2,15 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const isMobileBuild = process.env.VITE_MOBILE === 'true'
-
 export default defineConfig({
   plugins: [
     react(),
-    ...(isMobileBuild
-      ? []
-      : [
-          VitePWA({
+    VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico'],
       manifest: {
@@ -46,7 +41,6 @@ export default defineConfig({
         ],
       },
     }),
-        ]),
   ],
   server: {
     port: 5173,
