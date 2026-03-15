@@ -5,7 +5,6 @@ import { getToken } from '../auth/storage'
 import { useAuth } from '../contexts/AuthContext'
 import { useAuthConfig } from '../contexts/AuthConfigContext'
 import { useTranslations } from '../hooks/useTranslations'
-import { isMobileBuild } from '../config'
 
 export default function Login() {
   const { t } = useTranslations()
@@ -53,7 +52,7 @@ export default function Login() {
     [loginWithGoogle, navigate, t]
   )
 
-  const showSocial = !!googleClientId && !isMobileBuild
+  const showSocial = !!googleClientId
 
   return (
     <div className="card" style={{ maxWidth: 360, margin: '2rem auto' }}>

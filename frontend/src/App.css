@@ -3,8 +3,6 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* Avoid content under the notch / status bar on iOS */
-  padding-top: env(safe-area-inset-top);
 }
 
 .site-content {
@@ -158,8 +156,6 @@
 .nav {
   background: #1e293b;
   padding: 0.75rem 1rem;
-  /* Respect iOS notch / safe area when running as PWA or in Capacitor */
-  padding-top: calc(0.75rem + env(safe-area-inset-top));
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -213,7 +209,6 @@
 @media (max-width: 768px) {
   .nav {
     padding: 0.6rem 0.75rem;
-    padding-top: calc(0.6rem + env(safe-area-inset-top));
     gap: 0.4rem;
   }
   .nav-user {
